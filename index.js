@@ -7,9 +7,13 @@ import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import urlSchema from "./schema/urlSchema.js";
+import { generateSafeId } from "./utils/idGenerator.js";
 
 // Load environment variables
-dotenv.config();
+const imports = dotenv.config();
+
+console.log(imports);
 
 // Get the current file path and directory
 const __filename = fileURLToPath(import.meta.url);
@@ -21,39 +25,19 @@ const app = express();
 // Set the port number
 const PORT = process.env.PORT || 3000;
 
-// Connect to MongoDB
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/urlshortener";
+// Connect to MongoDB Atlas
+const MONGODB_URI = process.env.MONGODB_URI;
 mongoose
-  .connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGODB_URI)
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log("Connected to MongoDB Atlas");
   })
   .catch((error) => {
     console.error("MongoDB connection error:", error);
   });
 
-// Define URL schema
-const urlSchema = new mongoose.Schema({
-  shortCode: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  originalUrl: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-const UrlModel = mongoose.model("Url", urlSchema);
+// Import the UrlModel
+const UrlModel = urlSchema;
 
 // Middleware setup
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -92,7 +76,8 @@ app.post(`/${shortenURL}`, async (req, res) => {
     }
 
     // Generate a unique short code
-    const shortCode = uuidv4().substring(0, 8); // Use first 8 characters for shorter codes
+    // const shortCode = uuidv4().substring(0, 8); // Use first 8 characters for shorter codes
+    const shortCode = generateSafeId();
 
     // Create new URL document
     const newUrl = new UrlModel({
@@ -152,24 +137,30 @@ app.get(`/${redirectURLparams}/:shortCode`, async (req, res) => {
   }
 });
 
-// Route for shortening URLs (legacy form-based route for web interface)
+// Route for shortening URLs (web interface form)
 app.post("/shorten", async (req, res) => {
   try {
-    // Extract the original URL from the request body
-    const originalUrl = req.body.longUrl; // Note: different field name for form
+    // Extract the password and original URL from the request body
+    const { password, longUrl } = req.body;
 
-    // Validate originalUrl
-    if (!originalUrl) {
+    // Check if password is correct
+    if (password !== API_PASSWORD) {
+      return res.status(401).send("Unauthorized: Invalid password");
+    }
+
+    // Validate longUrl
+    if (!longUrl) {
       return res.status(400).send("Original URL is required");
     }
 
     // Generate a unique short code
-    const shortCode = uuidv4().substring(0, 8);
+    // const shortCode = uuidv4().substring(0, 8);
+    const shortCode = generateSafeId();
 
     // Create new URL document
     const newUrl = new UrlModel({
       shortCode,
-      originalUrl,
+      originalUrl: longUrl,
     });
 
     // Save to database

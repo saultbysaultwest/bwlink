@@ -21,12 +21,20 @@
       form {
         margin-bottom: 30px;
       }
-      input[type="text"] {
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: bold;
+      }
+      input[type="text"],
+      input[type="password"] {
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
-        margin: 5px 0;
+        margin-bottom: 15px;
+        box-sizing: border-box;
       }
       input[type="submit"] {
         background-color: #007bff;
@@ -35,6 +43,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        width: 100%;
       }
       input[type="submit"]:hover {
         background-color: #0056b3;
@@ -60,10 +69,19 @@
   </head>
   <body>
     <div class="container">
-      <h1>TinyURL - URL Shortener</h1>
+      <h1>BWLink - URL shortener/redirector</h1>
 
       <!-- Web Interface Form -->
       <form action="/shorten" method="POST">
+        <label for="password">API Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter API password"
+          required
+        />
+
         <label for="longUrl">Enter Long URL:</label>
         <input
           type="text"
@@ -82,7 +100,7 @@
 
         <h3>Shorten URL API</h3>
         <div class="api-example">
-          POST /su<br />
+          POST /shorten<br />
           Content-Type: application/json<br /><br />
           {<br />
           &nbsp;&nbsp;"password": "your_api_password",<br />
@@ -92,12 +110,12 @@
 
         <h3>Access Shortened URL</h3>
         <div class="api-example">
-          GET /lwp/shortCode<br />
+          GET /redirect/shortCode<br />
           (automatically redirects to original URL with parameters preserved)
         </div>
 
         <p>
-          <strong>Note:</strong> The API endpoints (/su and /lwp) are
+          <strong>Note:</strong> The API endpoints (/shorten and /redirect) are
           configurable via environment variables.
         </p>
       </div>
