@@ -41,8 +41,8 @@ PORT=3000
 MONGODB_URI=mongodb://localhost:27017/urlshortener
 
 # Custom API route names
-REDIRECT_URL_PARAMS=lwp
-SHORTEN_URL=su
+REDIRECT_URL_PARAMS=link
+SHORTEN_URL=short
 
 # Password for API authentication
 API_PASSWORD=your_secure_password_here
@@ -55,7 +55,7 @@ API_PASSWORD=your_secure_password_here
 **Endpoint:** `POST /{SHORTEN_URL}`
 
 ```bash
-curl -X POST http://localhost:3000/su \
+curl -X POST http://localhost:3000/short \
   -H "Content-Type: application/json" \
   -d '{
     "password": "your_secure_password_here",
@@ -69,7 +69,7 @@ curl -X POST http://localhost:3000/su \
 {
   "success": true,
   "shortCode": "8ab3c4d5",
-  "shortenedUrl": "http://localhost:3000/lwp/8ab3c4d5"
+  "shortenedUrl": "http://localhost:3000/link/8ab3c4d5"
 }
 ```
 
@@ -80,7 +80,7 @@ curl -X POST http://localhost:3000/su \
 Simply visit the shortened URL in a browser or make a GET request:
 
 ```bash
-curl -L http://localhost:3000/lwp/8ab3c4d5
+curl -L http://localhost:3000/link/8ab3c4d5
 ```
 
 The service will redirect you to the original URL, preserving any query parameters.
@@ -119,17 +119,17 @@ The API returns appropriate HTTP status codes and error messages:
 
 ## Example Use Cases
 
-With the default configuration (`REDIRECT_URL_PARAMS=lwp`, `SHORTEN_URL=su`):
+With the default configuration (`REDIRECT_URL_PARAMS=link`, `SHORTEN_URL=short`):
 
 1. Create a short URL:
 
    ```bash
-   POST /su
+   POST /short
    ```
 
 2. Access the short URL:
    ```bash
-   GET /lwp/abc123def
+   GET /link/abc123def
    ```
 
 You can customize these endpoints by changing the environment variables. For example, if you set `REDIRECT_URL_PARAMS=redirect` and `SHORTEN_URL=create`, then:
