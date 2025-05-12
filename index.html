@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyURL - URL Shortener</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css" />
+    <style>
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      form {
+        margin-bottom: 30px;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin: 5px 0;
+      }
+      input[type="submit"] {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+      .api-info {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+      .api-info h2 {
+        margin-top: 0;
+        color: #495057;
+      }
+      .api-example {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-left: 3px solid #007bff;
+        margin: 10px 0;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>TinyURL - URL Shortener</h1>
+
+      <!-- Web Interface Form -->
+      <form action="/shorten" method="POST">
+        <label for="longUrl">Enter Long URL:</label>
+        <input
+          type="text"
+          id="longUrl"
+          name="longUrl"
+          placeholder="https://example.com/very/long/url"
+          required
+        />
+        <input type="submit" value="Shorten URL" />
+      </form>
+
+      <!-- API Information -->
+      <div class="api-info">
+        <h2>API Endpoints</h2>
+        <p>This service also provides API endpoints for programmatic access:</p>
+
+        <h3>Shorten URL API</h3>
+        <div class="api-example">
+          POST /su<br />
+          Content-Type: application/json<br /><br />
+          {<br />
+          &nbsp;&nbsp;"password": "your_api_password",<br />
+          &nbsp;&nbsp;"longURL": "https://example.com/long/url"<br />
+          }
+        </div>
+
+        <h3>Access Shortened URL</h3>
+        <div class="api-example">
+          GET /lwp/shortCode<br />
+          (automatically redirects to original URL with parameters preserved)
+        </div>
+
+        <p>
+          <strong>Note:</strong> The API endpoints (/su and /lwp) are
+          configurable via environment variables.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
