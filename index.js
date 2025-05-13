@@ -46,11 +46,11 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 
 // Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 // serve CSS correctly
 // Serve static files with explicit MIME type setting
-/*
+
 app.use(
   express.static(path.join(__dirname), {
     setHeaders: (res, filePath) => {
@@ -61,7 +61,6 @@ app.use(
     },
   })
 );
-*/
 
 // Route for serving the index.html file
 app.get("/", (req, res) => {
