@@ -52,9 +52,9 @@ app.use(morgan("dev"));
 // Serve static files with explicit MIME type setting
 
 app.use(
-  express.static(path.join(__dirname), {
+  express.static(__dirname, {
     setHeaders: (res, filePath) => {
-      const mimeType = mime.getType(filePath);
+      const mimeType = mime.lookup(filePath);
       if (mimeType) {
         res.setHeader("Content-Type", mimeType);
       }
