@@ -47,7 +47,17 @@ app.use(morgan("dev"));
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
 
-// Define routes
+// serve CSS correctly
+
+app.use(
+  express.static("public", {
+    setHeaders: (res, path) => {
+      if (path.endsWith(".css")) {
+        res.setHeader("Content-Type", "text/css");
+      }
+    },
+  })
+);
 
 // Route for serving the index.html file
 app.get("/", (req, res) => {
