@@ -50,8 +50,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // serve CSS correctly
 // Serve static files with explicit MIME type setting
+/*
 app.use(
-  express.static(path.join(__dirname, "public"), {
+  express.static(path.join(__dirname), {
     setHeaders: (res, filePath) => {
       const mimeType = mime.getType(filePath);
       if (mimeType) {
@@ -60,11 +61,23 @@ app.use(
     },
   })
 );
+*/
 
 // Route for serving the index.html file
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
+
+// Or if your CSS is in the root directory:
+app.use(
+  express.static(__dirname, {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith(".css")) {
+        res.setHeader("Content-Type", "text/css");
+      }
+    },
+  })
+);
 
 // Get API route names from environment variables
 const redirectURLparams = process.env.REDIRECT_URL_PARAMS || "redirect";
