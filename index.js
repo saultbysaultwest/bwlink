@@ -9,6 +9,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import urlSchema from "./schema/urlSchema.js";
 import { generateSafeId } from "./utils/idGenerator.js";
+import mime from "mime";
 
 // Load environment variables
 const imports = dotenv.config();
@@ -48,12 +49,13 @@ app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // serve CSS correctly
-
+// Serve static files with explicit MIME type setting
 app.use(
-  express.static("public", {
-    setHeaders: (res, path) => {
-      if (path.endsWith(".css")) {
-        res.setHeader("Content-Type", "text/css");
+  express.static(path.join(__dirname, "public"), {
+    setHeaders: (res, filePath) => {
+      const mimeType = mime.getType(filePath);
+      if (mimeType) {
+        res.setHeader("Content-Type", mimeType);
       }
     },
   })
