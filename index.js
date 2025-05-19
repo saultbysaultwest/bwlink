@@ -132,6 +132,10 @@ app.post(`/${shortenURL}`, async (req, res) => {
 // Route for redirecting to the original URL (custom API endpoint)
 app.get(`/${redirectURLparams}/:shortCode`, async (req, res) => {
   try {
+	  
+	console.log(`Received request for shortCode: ${req.params.shortCode}`);
+	console.log(`Full URL: ${req.url}`);
+  
     // Extract the short code from the request parameters
     const shortCode = req.params.shortCode;
 
