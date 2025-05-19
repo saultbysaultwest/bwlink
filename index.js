@@ -130,21 +130,32 @@ app.post(`/${shortenURL}`, async (req, res) => {
 });
 
 // Route for redirecting to the original URL (custom API endpoint)
-app.get(`/${redirectURLparams}/:shortCode`, async (req, res) => {
+app.get(`/${redirectURLparams}/:shortCode*`, async (req, res) => {
   try {
-	  
-	console.log(`Received request for shortCode: ${req.params.shortCode}`);
-	console.log(`Full URL: ${req.url}`);
-  
     // Extract the short code from the request parameters
     const shortCode = req.params.shortCode;
+
+    // Get the additional path that follows the shortCode
+    // The * in the route pattern captures this as req.params[0]
+    const additionalPath = req.params[0] || "";
 
     // Find the URL in the database
     const urlDoc = await UrlModel.findOne({ shortCode });
 
     if (urlDoc) {
-      // If the short code exists, redirect to the original URL with params preserved
+      // If the short code exists, redirect to the original URL with path and params preserved
       let originalUrl = urlDoc.originalUrl;
+
+      // Append any additional path segments
+      if (additionalPath) {
+        // Remove any trailing slash from original URL
+        if (originalUrl.endsWith("/")) {
+          originalUrl = originalUrl.slice(0, -1);
+        }
+
+        // Add the additional path (which will start with a slash)
+        originalUrl += additionalPath;
+      }
 
       // Preserve query parameters
       const queryString = req.url.split("?")[1];
